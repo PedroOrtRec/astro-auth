@@ -1,16 +1,14 @@
 ---
-
+import LogoBosa from '@/components/LogoBosa.astro';
+import MainLayout from '@/layouts/MainLayout.astro';
 ---
+	
+<MainLayout>
 
-<html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro</title>
-	</head>
-	<body>
-		<h1>Astro</h1>
-	</body>
-</html>
+	<h1 class="text-3xl">Home Page</h1>
+
+	<div class="flex justify-center items-center text-blue-100 hover:text-blue-600 transition-colors duration-300 border-2 border-blue-100 rounded-lg p-4">
+		<LogoBosa />
+	</div>
+
+</MainLayout>

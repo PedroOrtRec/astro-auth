@@ -1,0 +1,39 @@
+---
+import AuthLayout from '@/layouts/AuthLayout.astro';
+import Form from '@/components/shared/Form.astro';
+---
+
+<AuthLayout title="Register">
+    <Form title="Register" direction="/login" />
+</AuthLayout>
+
+<script>
+    import { actions } from "astro:actions";
+    import Swal from 'sweetalert2';
+    
+        const form = document.querySelector('form') as HTMLFormElement;
+        const btnSubmit = document.querySelector('#btn-submit') as HTMLButtonElement;
+    
+    
+        form.addEventListener('submit', async (e) => {
+          e.preventDefault();
+          btnSubmit.setAttribute('disabled', 'disabled');
+    
+          const formData = new FormData(form);
+          const { data, error } = await actions.registerUser(formData);
+    
+          if (error) {
+            Swal.fire({
+              icon: 'error',
+              title: 'Credenciales incorrectas',
+              text: error.message,
+            });
+            btnSubmit.removeAttribute('disabled')
+            return;
+          }
+    
+          window.location.replace('/protected')
+          
+        });
+        
+      </script>

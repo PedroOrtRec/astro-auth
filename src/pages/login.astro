@@ -1,0 +1,75 @@
+---
+import AuthLayout from '@/layouts/AuthLayout.astro';
+import Form from '@/components/shared/Form.astro';
+---
+
+<AuthLayout title="Login">
+    <Form title="Login" direction="/register" withName={false} google={true} />
+</AuthLayout>
+
+<script>
+    import { firebase } from "@/firebase/config";
+    import { actions } from "astro:actions"; 
+    import { signInWithPopup, GoogleAuthProvider } from "firebase/auth";
+    import Swal from 'sweetalert2';
+    
+        const form = document.querySelector('form') as HTMLFormElement;
+        const btnSubmit = document.querySelector('#btn-submit') as HTMLButtonElement;
+        const btnGoogle = document.querySelector('#btn-google') as HTMLButtonElement;
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            btnSubmit.setAttribute('disabled', 'disabled');
+
+            const formData = new FormData(form);
+            const { data, error } = await actions.login(formData);
+
+            if (error) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Credenciales incorrectas',
+                    text: error.message,
+                });
+                btnSubmit.removeAttribute('disabled');
+                return;
+            }
+
+            window.location.replace('/protected')
+        })
+
+        btnGoogle.addEventListener('click', async () => {
+            btnGoogle.setAttribute('disabled', 'disabled');
+            const provider = new GoogleAuthProvider();
+
+            try {
+                console.log(firebase.auth)
+                const credentials = await signInWithPopup(firebase.auth, provider);
+
+                const { data, error } = await actions.LoginWithGoogle(credentials);
+
+                if (error) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: error.message,
+                    });
+                    return;
+                }
+
+                btnGoogle.innerText = 'Iniciando sesión...';
+                window.location.replace('/protected')
+
+            } catch (error) {
+               
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: error instanceof Error ? error.message : 'Error desconocido',
+                });
+
+                btnGoogle.removeAttribute('disabled');
+            }
+
+            
+        })
+</script>
